@@ -1,0 +1,138 @@
+﻿﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<h1 class="text-center text-success">THỐNG KÊ BÁO CÁO</h1>
+
+<div style="padding-left:20px; margin-top:30px;" class="row">
+    <div class="col-md-7">
+        <table class="table table-hover">
+            <tr>
+                <th>Loại sản phẩm</th>
+                <th>Doanh thu</th>
+            </tr>
+            @foreach (var item in ViewBag.revenueByType)
+            {
+                <tr>
+
+                    <td class="nameCat">@item.TypeName</td>
+
+                    <td class="subtoltalCat">
+                        @{ var formattedPrice = string.Format("{0:N0} đồng", item.TotalRevenue); }
+                        @formattedPrice
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-md-5">
+        <canvas id="myCateChart"></canvas>
+    </div>
+</div>
+
+<hr />
+
+<div style="padding-left:20px; margin-top:30px;" class="row">
+    <div class="col-md-7">
+        <table class="table table-hover">
+            <tr>
+                <th>Tên khách hàng</th>
+                <th>Doanh thu</th>
+            </tr>
+            @foreach (var item in ViewBag.revenueByUser)
+            {
+                <tr>
+
+                    <td class="userName">@item.TypeName</td>
+
+                    <td class="subtoltalUser">
+                        @{ var formattedPrice = string.Format("{0:N0} đồng", item.TotalRevenue); }
+                        @formattedPrice
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-md-5">
+        <canvas id="myRevenueChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    function randomColor() {
+        let r = parseInt(Math.random() * 255);
+        let g = parseInt(Math.random() * 255);
+        let b = parseInt(Math.random() * 255);
+
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function drawChart(data, label, title, type, canvasId) {
+        const ctx = document.getElementById(canvasId);
+
+        let colors = [];
+        for (let i = 0; i < data.length; i++)
+            colors.push(randomColor());
+        console.log(data)
+
+        new Chart(ctx, {
+            type: type,
+            data: {
+                labels: label,
+                datasets: [{
+                    label: title,
+                    data: data,
+                    borderWidth: 1,
+                    backgroundColor: colors
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+
+    var tdNameElement = document.querySelectorAll(".nameCat")
+
+    var quatityElemnt = document.querySelectorAll(".subtoltalCat")
+    quatityElemnt.forEach(item => console.log(item.innerHTML))
+
+    let data1 = [], label1 = [];
+    for (var i = 0; i < tdNameElement.length; i++) {
+        label1.push(tdNameElement[i].innerHTML)
+    }
+
+    for (var i = 0; i < quatityElemnt.length; i++) {
+        data1.push(parseInt(quatityElemnt[i].innerHTML));
+    }
+
+
+    var subtoltal = document.querySelectorAll(".subtoltalUser");
+    var producName = document.querySelectorAll(".userName");
+    var data2 = [], lable2 = [];
+
+    for (var i = 0; i < subtoltal.length; i++) {
+        let sub = subtoltal[i].innerHTML.replace(/,/g, '');
+        data2.push(parseInt(sub));
+    }
+    for (var i = 0; i < producName.length; i++) {
+        lable2.push(producName[i].innerHTML);
+    }
+
+    window.onload = function () {
+        drawChart(data1, label1, "Số Lượng", "doughnut", "myCateChart");
+        drawChart(data2, lable2, "Doanh Thu", "bar", "myRevenueChart");
+    }
+
+</script>

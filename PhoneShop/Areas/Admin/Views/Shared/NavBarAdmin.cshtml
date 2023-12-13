@@ -1,0 +1,37 @@
+﻿<div class="nav-left-sidebar sidebar-dark">
+    <div class="menu-list">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-divider">
+                        Menu
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Quản lý Sản phẩm", "Index", "Product_62132473", null, new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Quản lý loại sản phẩm", "Index", "Category_62132473", null, new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Quản lý khách hàng", "Index", "Customer_62132473", null, new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Quản lý nhân viên", "Index", "Employee_62132473", null, new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item">
+                        @Html.ActionLink("Quản lý đơn hàng", "Index", "Bill_62132473", null, new { @class = "nav-link" })
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>

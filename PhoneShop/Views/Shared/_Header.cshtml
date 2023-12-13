@@ -1,0 +1,209 @@
+﻿@{
+    var currentUser = Session["currentUser"] as PhoneShop.DTO.KhachHang_62132473;
+    var currentEmployee = Session["currentUser"] as PhoneShop.DTO.NhanVien_62132473;
+}
+
+<style>
+    span.user-css {
+        background-color: white;
+    }
+
+    .user-css, .style-log {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: black;
+        padding: 5px 7px;
+    }
+
+    span.user-css {
+        margin-left: 5px;
+    }
+
+    .style-log {
+        background-color: white;
+    }
+
+        .style-log:hover {
+            color: #ff4500;
+        }
+    .logoutStyle > a {
+        color: black;
+        text-decoration: none
+    }
+
+    .show {
+        display: block;
+    }
+    .parentUl {
+        position: relative;
+    }
+</style>
+
+<header class="header">
+    <div class="ega-top-header hidden-xs hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-2">
+                    <div class="ega-item-top-bar">
+
+                        <h1 style="background-color: white; border-radius:10px; padding:5px" class="h1-no-margin-padding">
+                            <span style="display: none">EGA Bách Hóa</span>
+                            <a href="@Url.Action("Index", "Home_62132473")" title="Siêu thị IT01">
+                                <img alt="Siêu thị IT01" src="~/static/image/logo_4.png"
+                                     class="ega-logo">
+                            </a>
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="ega-item-top-bar">
+
+                        <form class="ega-form-search-top" role="search" method="get"
+                              action="/Home_62132473/CategoryProduct/">
+                            <div class="ega-div-top-search">
+                                <input autocomplete="off" name="search" type="search"
+                                       placeholder="Bạn muốn mua gì?" />
+                                <button type="submit">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <div class="ega-item-top-bar">
+                        <div class="ega-top-message">
+
+                            @if (currentUser == null && currentEmployee == null)
+                            {
+                        <span class="hidden-xs ega-header-top-item">
+                            @Html.ActionLink("Đăng ký", "Register", "Login_62132473", null, new { @class = "ega-a-account-header", style = "font-size: 12px" })
+                            /@Html.ActionLink("Đăng nhập", "Index", "Login_62132473", null, new { @class = "ega-a-account-header", style = "font-size: 12px" })
+                        </span> }
+                                    else
+                                    {
+
+                        <span class="hidden-xs ega-header-top-item parentUl">
+                            @if (currentEmployee != null && currentEmployee.QuyenSD == 3)
+                            {
+                            <span class="user-css logoutStyle">@Html.ActionLink("Đơn hàng", "Index", "Bill_62132473")</span>
+                            }
+
+                                 </span>
+
+                            <span class="hidden-xs ega-header-top-item parentUl">
+                                @if (@currentUser == null)
+                                {
+                                    <span class="user-css">Chào @currentEmployee.HoTen !</span> }
+                                        else
+                                        {
+                                     <span class="user-css">Chào @currentUser.HoTen !</span>}
+
+
+                                <span class="user-css logoutStyle">@Html.ActionLink("Đăng xuất", "Logout", "Login_62132473")</span>
+                            </span>
+                            }
+
+
+
+                            <span style="width:100px" class="ega-header-top-item ega-top-cart-sendo">
+                                <a class="ega-a-cart-icon-top" href="@Url.Action("Index", "Cart_62132473")"
+                                   title="cart">
+                                    <span class="glyphicon glyphicon-shopping-cart">
+
+                                    </span>
+                                    <span class="ega-a-cart-icon-top__number ega-header-top-item" id="numberCart">0</span>
+                                </a>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--menu-->
+    <div>
+        <div class="navbar yamm navbar-default ega-menu-top">
+            <div class="container ega-container-header-sm">
+
+                <div id="ega-menu-deiv-top" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav" style="margin-bottom: 0;">
+
+                        @if (ViewBag.LoaiSP != null)
+                        {
+                            foreach (var c in ViewBag.LoaiSP)
+                            {
+                                <!--submenu-->
+                                <li class="dropdown yamm-fw ega-dropdown-menu li-ega-menu-no-mega">
+                                    <a href="@Url.Action(actionName: "CategoryProduct", controllerName: "Home_62132473", routeValues: new { LoaiSP = c.MaLoaiSP })" title="Sản phẩm"
+                                       data-toggle="dropdown" class="dropdown-toggle hidden-xs hidden-sm"
+                                       aria-expanded="true">
+                                        @c.TenLoaiSP
+                                        <b class="caret hidden-xs"></b>
+                                    </a>
+                                    <div class="visible-ega-table-xs ega-menu-xs-drop-down">
+                                        <a href="@Url.Action(actionName: "CategoryProduct", controllerName: "Home_62132473", routeValues: new { LoaiSP = c.MaLoaiSP })" title="Sản phẩm">
+                                            Sản phẩm
+                                        </a>
+                                        <a href="javascript:void(0)" class="ega-menu-right-down-ico">
+                                            <span class="">
+                                                <span class="glyphicon glyphicon-menu-down"></span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </li>
+                            }
+                        }
+                       
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy giá trị từ Local Storage
+
+        var cartItemCount = sessionStorage.getItem("cartItemCount");
+
+
+        // Nếu giá trị không null hoặc undefined, cập nhật lại trên giao diện
+        if (cartItemCount != null && cartItemCount != undefined ) {
+            var countCartElement = document.getElementById("numberCart");
+            countCartElement.innerHTML = cartItemCount;
+        }
+    });
+
+    // script drop-down //
+
+
+    let dropDrownElement = document.getElementsByClassName("span-caret")[0];
+
+    if (dropDrownElement) {
+        dropDrownElement.onclick = function () {
+
+            let ulElement = document.getElementsByClassName("ul-style")[0];
+            console.log(ulElement.style.display)
+
+
+            ulElement.classList.toggle("show");
+
+
+
+        }
+    }
+    
+
+</script>

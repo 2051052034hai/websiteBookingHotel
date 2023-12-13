@@ -1,0 +1,245 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var currentEmployee = Session["currentUser"] as PhoneShop.DTO.NhanVien_62132473;
+}
+
+<style>
+    .search-buttons {
+        border-radius: 3px;
+        border: 1px solid black;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .main-seach {
+        margin-bottom: 5px;
+        float: right;
+        top: 10px;
+        right: 10px;
+    }
+
+
+    body {
+        background: #f1f1f1;
+    }
+
+    div.all-tables {
+        border-collapse: collapse;
+        background-color: #fff;
+        padding: 20px 25px;
+        margin-left: 5%;
+        margin-top: 5%;
+        margin-right: 3%;
+    }
+
+    .btn-rounded {
+        width: 47px;
+    }
+    .status {
+        background-color: rgba(255, 0, 0, 0.7); 
+        color: white;
+        padding: 5px;
+        border-radius: 10px;
+    }
+    .approve {
+        background-color:black;
+        color:white;
+        opacity:0.8;
+    }
+</style>
+
+
+<div class="all-tables" style="overflow: scroll; height: 800px">
+
+    @if (currentEmployee != null)
+    {
+        <div id="cusID" class="hide">
+            <span>@currentEmployee.MaNV</span>
+        </div>
+    }
+
+    <div id="success" class="alert alert-danger">
+        <strong>lỗi</strong>
+    </div>
+
+    <div style="margin-left: auto; width: 100%" class="main-seach">
+        <span style="font-size: 15px;">Tìm kiếm:</span>
+        <input style="font-size: 15px; width:100%; padding:5px" type="text" onchange="searchUser()" id="searchInput" class="search-buttons" oninput="searchUser()" placeholder="Nhập mã hoặc tên khách hàng...">
+    </div>
+
+    <div>
+        <table id="userTable" class="table table-striped">
+            <tr>
+                <th>Số hoá đơn</th>
+                <th>Ngày đặt hàng</th>
+                <th>Ngày giao hàng</th>
+                <th>Tên khách hàng</th>
+                <th>Tổng tiền</th>
+                <th>Nhân viên giao hàng</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+            @foreach (var cart in ViewBag.carts)
+            {
+                <tr>
+                    <td class="billID">@cart.SoHD</td>
+                    <td class="orderDate">@cart.NgayDatHang</td>
+                    <td><input class="dateInput" type="date" onchange="handleDateChange(this)" /></td>
+                    @if (@cart.KhachHang_62132473 != null)
+                    {
+                        <td>@cart.KhachHang_62132473.HoTen</td>
+                    }
+                    else if (@cart.TempProperties != null)
+                    {
+                        if (@cart.TempProperties.ContainsKey("KhachHang2"))
+                        {
+
+                            <td>@cart.TempProperties["KhachHang2"]</td>
+                        }
+                    }
+                    <td>
+                        @{ var formattedPrice = string.Format("{0:N0} đ", cart.TongTien); }
+                        @formattedPrice
+                    </td>
+                    <td>
+                        <select class="customerID" style="width:70%" name="loginType">
+                            @foreach (var cus in ViewBag.customers)
+                            {
+                                <option value="@cus.MaNV" selected>@cus.HoTen</option>
+                            }
+                        </select>
+                    </td>
+                    <td><span class="status">Chờ phê duyệt</span></td>
+                    <td><button class="approve">Phê duyệt</button></td>
+                </tr>
+       }
+        </table>
+    </div>
+</div>
+
+<script>
+
+    var searchInput = document.getElementById("searchInput")
+    var userTable = document.getElementById("userTable");
+    var currentEmployee = document.getElementById("cusID").textContent;
+
+    function searchUser() {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        for (let i = 1; i < userTable.rows.length; i++) {
+            const productID = userTable.rows[i].cells[0].textContent.toLowerCase();
+            const productName = userTable.rows[i].cells[3].textContent.toLowerCase();
+
+            if (productID.includes(searchTerm) || productName.includes(searchTerm)) {
+                userTable.rows[i].style.display = ''; // Show the row
+            } else {
+                userTable.rows[i].style.display = 'none'; // Hide the row
+            }
+        }
+    }
+
+    // Sử dụng jQuery để đợi 5 giây, sau đó ẩn đi thông báo
+    $(document).ready(function () {
+        let erorr = document.getElementById("success");
+        erorr.classList.add("hide");
+        let approve_Click = document.getElementsByClassName(".approve")[0];
+
+    });
+
+    //// Xử lý phê duyệt đơn hàng
+    let allApprove = document.querySelectorAll(".approve");
+    let allDelivery = document.querySelectorAll(".dateInput");
+
+    for (let i = 0; i < allDelivery.length; i++) {
+        if (allDelivery[i].value === '') {
+            allApprove[i].style.opacity = 0.3;
+            allApprove[i].disabled = true;
+        } else {
+            allApprove[i].style.opacity = 0.8;
+            allApprove[i].disabled = false;
+        }
+    }
+
+    // Chuyển đổi định dạng ngày dd/mm/yyyy
+    function handleChangeTime(timer) {
+
+        let dateObject = new Date(timer);
+        let year = dateObject.getFullYear();
+        let month = dateObject.getMonth() + 1;
+        let day = dateObject.getDate();
+        let formattedDate = year + '-' + (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month;
+
+        return formattedDate;
+    }
+
+    function handleDateChange(input) {
+        let approveParent = input.parentNode.parentNode;
+        let approveButton = approveParent.querySelector(".approve");
+        let orderDate = approveParent.querySelector(".orderDate")
+        let newDate = handleChangeTime(orderDate.textContent);
+        let erorr = document.getElementById("success");
+        let check = false;
+        let day1 = new Date(input.value);
+        let day2 = new Date(newDate);
+        let billID = approveParent.querySelector(".billID").textContent;
+        let customerId = document.getElementsByClassName("customerID")[0].value;
+
+        if ((day1.getDate() > day2.getDate()) && (day1.getMonth() + 1) >= (day2.getMonth() + 1)
+            && (day1.getFullYear() >= day2.getFullYear())) {
+            check = true;
+        } else {
+            check = false;
+        }
+
+        if (input.value === '' || check === false) {
+            approveButton.style.opacity = 0.3;
+            approveButton.disabled = true;
+            erorr.classList.remove("hide");
+            erorr.classList.add("show");
+            erorr.querySelector("strong").textContent =
+            'Ngày giao hàng không được bé hơn hoặc bằng ngày đặt hàng !'
+        } else {
+            approveButton.style.opacity = 0.8;
+            approveButton.disabled = false;
+            erorr.querySelector("strong").textContent = ''
+            erorr.classList.remove("show");
+            erorr.classList.add("hide");
+
+            let formattedDateTime = day2.toISOString().slice(0, 23).replace("T", " ");
+            approveButton.onclick = function () {
+                let data = {
+                    SoHD: parseInt(billID),
+                    NgayGiaoHang: formattedDateTime,
+                    MaNV0: parseInt(customerId),
+                    MaNV1: parseInt(currentEmployee),
+                    TinhTrang: 1
+                }
+                handleUpdateCart(data);
+            };
+        }
+    }
+    /////////////////end/////////////////////
+
+    //Update
+    const handleUpdateCart = function (data) {
+     
+        $.ajax({
+            type: "POST",
+            url: "/Bill_62132473/Update",
+            data: { newData: data },
+            success: function (response) {
+                console.log("Cập nhật dữ liệu thành công");
+                location.reload();
+            },
+            error: function (error) {
+                console.error("Cập nhật thất bại!", error);
+            }
+        });
+    }
+</script>

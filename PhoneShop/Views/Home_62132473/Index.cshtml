@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+}
+
+<style>
+    .ega-home-slider .owl-dots {
+        bottom:30px !important;
+    }
+    .styleDescription {
+        color: black;
+        font-size: 14px;
+        max-height: 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin-top:0px;
+        padding: 0px 20px;
+    }
+</style>
+
+<div class="page-content container">
+    <!----------------Phần ảnh trượt slice đầu trang web--------------->
+    <section class="ega-section-1">
+        <!-- include session-->
+        <div id="ega-home-slider" class="ega-home-slider owl-carousel owl-theme owl-loaded owl-drag">
+            <!----------------Ảnh trượt đầu tiên------------>
+            <div class="owl-stage-outer">
+                <div class="owl-item active" style="width: 1160px;">
+                    <div class="item">
+                        <a href="#"
+                           title="Tất cả sản phẩm" class="clearfix">
+                            <img style="width: 1200px; height: 350px" class="img-slider-home" data-max-width="1160"
+                                 src="~/static/image/iphone_bia_1.png"
+                                 alt="Tất cả sản phẩm">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!----------------Ảnh trượt thứ hai------------>
+            <div class="owl-stage-outer">
+                s
+                <div class="owl-item active" style="width: 1160px;">
+                    <div class="item">
+                        <a href="#"
+                           title="Tất cả sản phẩm" class="clearfix">
+                            <img style="width: 1200px; height:350px"  class="img-slider-home" data-max-width="1160"
+                                 src="~/static/image/iphone_bia_2.png"
+                                 alt="Tất cả sản phẩm">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!------------phẩn nút bấm------------>
+            <div class="owl-dots">
+                <div class="owl-dot active"><span></span></div>
+                <div class="owl-dot"><span></span></div>
+            </div>
+
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#ega-home-slider').owlCarousel({
+                    items: 1,
+                    loop: true,
+                    nav: true,
+                    navText: ["<span class='glyphicon glyphicon-menu-left'></span>", "<span class='glyphicon glyphicon-menu-right'></span>"],
+                    dots: true
+                });
+            })
+        </script>
+    </section>
+
+
+    <!--session: collection that include in main menu-->
+
+    <section class="ega-home-collection">
+
+        @if (ViewBag.LoaiSP != null)
+        {
+            foreach (var c in ViewBag.LoaiSP)
+            {
+                <div class="ega-home-slider-products hidden-xs">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h2 class="home-product-name">
+                                <a href="#" title="Thực phẩm, đồ uống" class="ega-home-collection-name-title">
+                                    @c.TenLoaiSP
+                                </a>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="ega-home-product-items">
+                        <div class="owl-carousel owl-theme ega-products-owl-carousel owl-loaded owl-drag"
+                             data-count="10" data-url="/thuc-pham-do-uong">
+
+                            @foreach (var SP in ViewBag.SanPham_62132473s)
+                            {
+                                if (SP.LoaiSP == c.MaLoaiSP)
+                                {
+                                    <div class="owl-stage-outer">
+                                        <div class="owl-item active" style="width: 190px;">
+                                            <div class="item">
+                                                <a class="ega-home-product-link"
+                                                   href="/Product_62132473/SanPham/@SP.MaSP"
+                                                   title="@SP.TenSP">
+                                                    <img class="center-block"
+                                                         src="@SP.AnhSP"
+                                                         alt="@SP.TenSP">
+                                                    <div>
+                                                        <h3 class="ega-home-product-name">
+                                                            @SP.TenSP
+                                                        </h3>
+                                                        <h3 class="styleDescription">
+                                                            @SP.Mota
+                                                        </h3>
+                                                        <div class="ega-main-price-home">
+                                                            @{ var formattedPrice = string.Format("{0:N0}đ", SP.DonGia); }
+                                                            @formattedPrice
+                                                        </div>
+                                                    </div>
+                                                   
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </section>
+
+</div>

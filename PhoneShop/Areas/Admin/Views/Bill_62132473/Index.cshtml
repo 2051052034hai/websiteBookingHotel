@@ -1,0 +1,216 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+}
+
+<style>
+    .search-buttons {
+        border-radius: 3px;
+        border: 1px solid black;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .main-seach {
+        margin-bottom: 5px;
+        float: right;
+        top: 10px;
+        right: 10px;
+    }
+
+
+    body {
+        background: #f1f1f1;
+    }
+
+    div.all-tables {
+        border-collapse: collapse;
+        background-color: #fff;
+        padding: 20px 25px;
+        margin-left: 5%;
+        margin-top: 5%;
+        margin-right: 3%;
+    }
+
+    .btn-rounded {
+        width: 47px;
+    }
+
+    .status-red {
+        background-color: rgba(255, 0, 0, 0.7);
+        color: white;
+        padding: 5px;
+        border-radius: 10px;
+        font-size: 10px;
+    }
+
+    .status-green {
+        background-color: rgba(0, 128, 0, 0.7);
+        color: white;
+        padding: 5px;
+        border-radius: 10px;
+        font-size: 10px;
+    }
+
+    .status-blue {
+        background-color: rgba(0, 0, 255, 0.7);
+        color: white;
+        padding: 5px;
+        border-radius: 10px;
+        font-size: 10px;
+    }
+    .approve {
+        background-color: black;
+        color: white;
+        opacity: 0.8;
+        
+    }
+    .style-black {
+        background-color: black;
+        color: white; 
+        font-size: 13px; 
+        padding:5px;
+    }
+    .style-black:hover {
+      opacity:0.7;
+    }
+</style>
+
+
+<div class="all-tables" style="overflow: scroll; height: 800px">
+
+
+    <div style="margin-left: auto; width: 100%" class="main-seach">
+        <span style="font-size: 15px;">Tìm kiếm:</span>
+        <input style="font-size: 15px; width:100%; padding:5px" type="text" onchange="searchUser()" id="searchInput" class="search-buttons" oninput="searchUser()" placeholder="Nhập mã hoặc tên khách hàng...">
+    </div>
+
+    <div>
+        <table id="userTable" class="table table-striped">
+            <tr>
+                <th>Số hoá đơn</th>
+                <th>Ngày đặt hàng</th>
+                <th>Ngày giao hàng</th>
+                <th>Tên khách hàng</th>
+                <th>Tổng tiền</th>
+                <th>Nhân viên giao hàng</th>
+                <th>Nhân viên phê duyệt</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+
+            </tr>
+            @foreach (var cart in ViewBag.bills)
+            {
+        <tr>
+            <td class="billID">@cart.SoHD</td>
+            <td width="150" class="orderDate">@cart.NgayDatHang</td>
+            <td width="150" class="orderDate">@cart.NgayGiaoHang</td>
+            @if (@cart.KhachHang_62132473 != null)
+            {
+                <td>@cart.KhachHang_62132473.HoTen</td>
+            }
+            else if (@cart.TempProperties != null)
+            {
+                if (@cart.TempProperties.ContainsKey("KhachHang2"))
+                {
+
+                    <td>@cart.TempProperties["KhachHang2"]</td>
+                }
+            }
+            <td>
+                @{ var formattedPrice = string.Format("{0:N0} đ", cart.TongTien); }
+                @formattedPrice
+            </td>
+            @if (cart.TempPropertiesEmp != null)
+            {
+                <td width="60"><span class="status">@cart.TempPropertiesEmp["NhanVien0"]</span></td>
+                <td width="60"><span class="status">@cart.TempPropertiesEmp["NhanVien1"]</span></td>
+            }
+            else
+            {
+                <td width="120"></td>
+                <td width="120"></td>
+            }
+
+            @if (cart.TinhTrang == 0)
+            {
+                <td width ="100"><span class="status-red">Chờ phê duyệt</span></td>
+            }
+            else if (cart.TinhTrang == 1)
+            {
+                <td ><span class="status-blue">Đang giao hàng</span></td>
+                <td><button class="style-black btn_Click">Hoàn thành </button></td>
+            }
+            else
+            {
+                <td><span class="status-green">Đã nhận hàng</span></td>
+            }
+
+
+        </tr>
+     }
+        </table>
+    </div>
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let arrBtn = document.querySelectorAll(".btn_Click");
+
+        arrBtn.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                let parentBtn = this.parentNode.parentNode;
+                let billID = parentBtn.querySelector(".billID").textContent;
+                let data = {
+                    SoHD: parseInt(billID),
+                    TinhTrang: 2
+                }
+               
+                handleUpdateCart(data);
+            });
+        });
+    });
+
+    //Update
+    const handleUpdateCart = function (data) {
+     
+        $.ajax({
+            type: "POST",
+            url: "/Bill_62132473/UpdateAdmin",
+            data: { newData: data },
+            success: function (response) {
+                console.log("Cập nhật dữ liệu thành công");
+                location.reload();
+            },
+            error: function (error) {
+                console.error("Cập nhật thất bại!", error);
+            }
+        });
+    }
+
+    var searchInput = document.getElementById("searchInput")
+    var userTable = document.getElementById("userTable");
+
+    function searchUser() {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        for (let i = 1; i < userTable.rows.length; i++) {
+            const productID = userTable.rows[i].cells[0].textContent.toLowerCase();
+            const productName = userTable.rows[i].cells[3].textContent.toLowerCase();
+
+            if (productID.includes(searchTerm) || productName.includes(searchTerm)) {
+                userTable.rows[i].style.display = ''; 
+            } else {
+                userTable.rows[i].style.display = 'none'; 
+            }
+        }
+    }
+
+  
+</script>
