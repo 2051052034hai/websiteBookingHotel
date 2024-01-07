@@ -1,0 +1,274 @@
+﻿﻿﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    h1.cart-null {
+        font-size: 30px;
+        background-color: white;
+        padding: 20px 25px;
+        text-align: center;
+        width: 100%;
+        color: #CC6633;
+    }
+
+    div.row-width {
+        background-color: white;
+        margin-bottom: 50px;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .ega-footer {
+        margin-bottom: 0px;
+    }
+
+    .media-heading > a {
+        text-decoration: none;
+        margin-left: 10px;
+    }
+
+    .tr-view > td {
+        text-align: center;
+    }
+
+    div.media > .media-body {
+        padding-top: 30px;
+    }
+
+    .padding-view {
+        padding-top: 35px !important;
+    }
+
+    #exampleInputEmail1 {
+        margin-top: 20px;
+        width: 40px;
+        text-align: center;
+    }
+
+    .delete-view {
+        margin-top: 20px;
+    }
+
+    .subtotal-view {
+        font-size: 20px;
+        width: 150px;
+        padding-left: 0px;
+        margin-left: 0px;
+        color: #DD0000;
+    }
+
+    .sub-view {
+        text-align: right;
+        font-size: 20px;
+        font-weight: bold;
+        width: 100px;
+    }
+
+    .div-view {
+        display: flex;
+        padding-top: 10px;
+        padding-bottom: 15px;
+        border-top: 1px solid #DDDDDD;
+        width: 100%;
+    }
+
+        .div-view > div {
+            margin-right: 0.5%;
+        }
+
+        .div-view div:first-child {
+            margin-left: auto;
+        }
+
+    .text-cart {
+        color: #EE0000;
+    }
+
+    .flex-td {
+        display: flex !important;
+    }
+
+        .flex-td > div {
+            height: 34px !important;
+            margin-top: 20px;
+        }
+    .quantity{
+       margin-top:20px;
+       width:20% !important;
+       background-color:red;
+    }
+        .quantity > input {
+            width: 100%;
+        }
+</style>
+
+<h2 class="text-center text-cart">Đơn hàng</h2>
+<div class="row row-width">
+    <div class="col-sm-12 col-md-10 col-md-offset-1">
+        @if (ViewBag.orders.Count != null)
+            {
+                <span style="display:none" id="countCart">@ViewBag.orders.Count</span>
+            }
+        @if (ViewBag.orders == null || ViewBag.orders.Count == 0)
+        {
+            <h1 class="cart-null">Chưa có phòng nào được thuê!</h1>
+
+            <div class="div-view">
+                <div>
+                    <a class="btn btn-default" href="@Url.Action("Index", "Home")">
+                        <span class="glyphicon glyphicon-shopping-cart"></span> Tiếp tục thuê phòng
+                    </a>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+
+                        <th class="text-center">Tên phòng</th>
+                        <th class="text-center">Giá phòng</th>
+                        <th class="text-center">SL người</th>
+                        <th class="text-center">Ngày đặt phòng</th>
+                        <th class="text-center">Ngày nhận phòng</th>
+                        <th class="text-center">Ngày trả phòng</th>
+                        <th class="text-center">Loại dịch vụ</th>
+                        <th class="text-center">Tổng</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody class="all-subtotal">
+
+
+                    @foreach (var item in ViewBag.orders)
+                    {
+                    <tr class="tr-view" style="border:1px solid #DDDDDD">
+
+                        <td class="col-sm-8 col-md-6">
+                            <div class="media">
+                                <a class="thumbnail pull-left"> <img class="media-object" src="@item.Room.image" style="width: 72px; height: 72px;"> </a>
+
+                                <div class="media-body">
+                                    <h4 class="media-heading text-center"><a href="#">@item.Room.name</a></h4>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td class="col-sm-1 col-md-1 text-center padding-view"><strong>@item.Room.unitPrice.ToString("N0") VNĐ</strong></td>
+
+                        <td class="col-sm-1 col-md-1 text-center padding-view"><strong>@item.Room.quantity</strong></td>
+                        <td class="col-sm-1 col-md-1 text-center padding-view "><strong class="bookingToday">@item.bookingToday</strong></td>
+                        <td class="col-sm-1 col-md-1 text-center padding-view "><strong class="bookingDate">@item.bookingDate</strong></td>
+                        <td class="col-sm-1 col-md-1 text-center padding-view "><strong class="checkOutDate">@item.checkOutDate</strong></td>
+                        @if (item.Service != null)
+                        {
+                            <td class="col-sm-1 col-md-1 text-center padding-view "><strong>@item.Service.name</strong></td>
+
+                        }
+                        else
+                        {
+                            <td class="col-sm-1 col-md-1 text-center padding-view "><strong>Không</strong></td>
+                        }
+                        <td class="col-sm-1 col-md-1 text-center padding-view"><strong class="subtotal">@item.total.ToString("N0") VNĐ</strong></td>
+                        <td class="col-sm-1 col-md-1">
+                            <a class="btn btn-danger delete-view btn-close">
+                                <span class="glyphicon"></span> Huỷ
+                            </a>
+                            <span id="orderID" style="display:none">@item.id</span>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="div-view">
+                <div>
+                    <a class="btn btn-default" href="@Url.Action("Index", "Home")">
+                        <span class="glyphicon glyphicon-shopping-cart"></span> Tiếp tục thuê phòng
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+
+    // Định dạng ngày cho cột bookingDate và checkOutDate
+    function changeTime(timer) {
+        var parts = timer.split(' ')[0].split('/');
+        var formattedDate = parts[0] + '/' + parts[1] + '/' + parts[2];
+        return formattedDate;
+    }
+
+    $(".bookingDate").each(function () {
+        $(this).text(changeTime($(this).text()));
+    });
+
+    $(".bookingToday").each(function () {
+        $(this).text(changeTime($(this).text()));
+    });
+
+    $(".checkOutDate").each(function () {
+        $(this).text(changeTime($(this).text()));
+    });
+
+    //Huỷ đơn hàng
+    $(document).ready(function () {
+        $(".btn-close").on("click", function () {
+            var clickedParent = $(this).parent();
+            let orderID = clickedParent.find("#orderID").text();
+            let bookingToday = $(this).parent().parent().find(".bookingToday");
+            //Kiểm tra không được huỷ quá 8 tiếng kể từ ngày đặt phòng
+
+            // Chuyển đổi định dạng ngày từ "dd/mm/yyyy" sang "mm/dd/yyyy"
+            let parts = bookingToday.text().split("/");
+            let formattedBookingDateText = parts[1] + "/" + parts[0] + "/" + parts[2];
+            let date1 = new Date(new Date(formattedBookingDateText));
+            let date2 = new Date(new Date());
+
+            // Sự chênh lệch giữa ngày hiện tại và ngày bookingToday (đơn vị: mili giây)
+            let timeDifference = date1 - date2;
+
+            // Kiểm tra xem ngày đặt phòng có quá 8 giờ so với ngày hiện tại không
+            if (timeDifference >= 8) {
+                return alert("Huỷ phòng không áp dụng khi quá 8 giờ so với ngày đặt phòng!")
+            } 
+
+            // Hiển thị cửa sổ xác nhận
+            let confirmCancel = confirm("Bạn có chắc muốn huỷ đặt phòng không?");
+
+            // Nếu người dùng chọn OK
+            if (confirmCancel) {
+                fetch('/Orders/DeleteOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ orderID: parseInt(orderID) }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                window.location.reload();
+            }
+        });
+    });
+
+     // Đếm và lưu giá trị tổng số đơn hàng vào sessionStorage
+    document.addEventListener('DOMContentLoaded', function () {
+        var localStage = $("#countCart").text();
+        sessionStorage.setItem('countCart', localStage);
+    });
+</script>

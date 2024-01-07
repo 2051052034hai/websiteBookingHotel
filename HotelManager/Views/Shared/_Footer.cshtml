@@ -1,0 +1,233 @@
+﻿
+<style>
+</style>
+
+<footer class="ega-footer">
+    <div class="container">
+        <div class="ega-footer-cols-flex">
+            <div>
+                <div style="display: flex">
+                    <a href="@Url.Action("Index", "Home")" title="logo phòng">
+                        <img alt="Siêu thị IT01" src="~/static/image/logo_7.png"
+                             class="ega-logo">
+                    </a>
+                    <h4 style="color: white; font-family:VnClarendonH; margin-left:5px" ;>Booking.vn</h4>
+                </div>
+                <div>
+                    <h4>Quản Lý khách Sạn</h4>
+                </div>
+
+                <div class="footer-address-additional">
+                    Lầu 3 - Tòa nhà Lữ Gia - Số 70 Lữ Gia - P.15 - Q.11 - Tp.HCM
+                </div>
+                <div class="footer-address-additional">
+                    <a title="phone" href="tel:19006750">19006750</a>
+                </div>
+                <div class="footer-address-additional">
+                    <a href="">support@booking.vn</a>
+                </div>
+            </div>
+            <div class="">
+                <h4 class="ega-ft-toggle-xs" data-show="c2">
+                    <span style="font-size: 13px" data-show="c2"
+                          class="glyphicon glyphicon-plus ega-visible-xs-inline-block"></span>
+                    Danh mục loại phòng
+                </h4>
+                <ul class="ega-list-menu hidden-xs" data-show="c2">
+
+
+                    @if (ViewBag.loaiPhong != null)
+                    {
+                        foreach (var c in ViewBag.loaiPhong)
+                        {
+                    <li>
+                        <a href="@Url.Action(actionName: "RoomInType", controllerName: "Home", routeValues: new { LoaiPhong = c.id })" title="Sản phẩm">
+                            <span class="">
+                                <img alt="Tất cả sản phẩm"
+                                     src="~/static/image/widget-link.png">
+                            </span>
+                            @c.name
+                        </a>
+                    </li>
+                        }
+                    }
+                    </ul>
+            </div>
+            <div class="">
+                <h4 class="ega-ft-toggle-xs" data-show="c3">
+                    <span style="font-size: 13px" data-show="c3"
+                          class="glyphicon glyphicon-plus ega-visible-xs-inline-block"></span>
+                    Hỗ trợ khách hàng
+
+                </h4>
+                <ul class="ega-list-menu hidden-xs" data-show="c3">
+
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Chính sách giao hàng"
+                                     src="~/static/image/widget-link.png">
+                            </span>Chính sách thuê phòng
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Đổi trả, bảo hành"
+                                     src="~/static/image/widget-link.png">
+                            </span>Đổi trả phòng, dịch vụ
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Hướng dẫn mua hàng"
+                                     src="~/static/image/widget-link.png">
+                            </span>Hướng dẫn thuê phòng
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Quy chế hoạt động"
+                                     src="~/static/image/widget-link.png">
+                            </span>Quy chế hoạt động
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Tìm kiếm" src="~/static/image/widget-link.png">
+                            </span>Tìm kiếm
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="https://ega-bach-hoa.mysapo.net/gioi-thieu">
+                            <span class="">
+                                <img alt="Giới thiệu" src="~/static/image/widget-link.png">
+                            </span>Giới thiệu
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Liên hệ" src="~/static/image/widget-link.png">
+                            </span>Liên hệ
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="">
+                <h4 class="ega-ft-toggle-xs" data-show="c4">
+                    <span style="font-size: 13px" data-show="c4"
+                          class="glyphicon glyphicon-plus ega-visible-xs-inline-block"></span>
+                    Tài khoản
+
+                </h4>
+                <ul class="ega-list-menu hidden-xs" data-show="c4">
+
+
+                    <li>
+                        <a href="@Url.Action("Index", "Login")">
+                            <span class="">
+                                <img alt="Đăng nhập" src="~/static/image/widget-link.png">
+                            </span>
+                            Đăng nhập
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Register", "Login")">
+                            <span class="">
+                                <img alt="Đăng ký" src="~/static/image/widget-link.png">
+                            </span>
+                            Đăng ký
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Bảo mật thông tin"
+                                     src="~/static/image/widget-link.png">
+                            </span>
+                            Bảo mật thông tin
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Kiểm tra đơn hàng"
+                                     src="~/static/image/widget-link.png">
+                            </span>
+                            Kiểm tra đặt phòng
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Liên hệ góp ý"
+                                     src="~/static/image/widget-link.png">
+                            </span>
+                            Liên hệ góp ý
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Kiểm tra điểm bảo hành"
+                                     src="~/static/image/widget-link.png">
+                            </span>
+                            Kiểm tra dịch vụ
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="">
+                                <img alt="Hệ thống cửa hàng"
+                                     src="~/static/image/widget-link.png">
+                            </span>
+                            Hệ thống thuê phòng
+                        </a>
+                    </li>
+
+
+                </ul>
+            </div>
+            <div class="">
+                <h4>
+                    Chứng nhận
+                </h4>
+
+                <div style="margin-bottom: 5px;">
+                    <a href="https://google.com/">
+                        <img alt="Chứng nhận" src="~/static/image/fot_chung_nhan.png"
+                             class="img-responsive">
+                    </a>
+                </div>
+
+
+                <div style="margin-top: 15px;">
+                    <a href="#">
+                        <img alt="Chứng nhận" src="~/static/image/fot_chung_nhan2.png"
+                             class="img-responsive">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</footer>
+

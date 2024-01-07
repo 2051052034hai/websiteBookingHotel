@@ -1,0 +1,613 @@
+﻿
+@{ ViewBag.Title = "SanPham";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = Session["currentUser"] as HotelManager.DTO.Customer; }
+
+<style>
+    .ega-product-xs-no-pd {
+        padding-top: 20px;
+    }
+
+    .orderAll {
+        width: 60%;
+        background-color: white;
+        margin: auto;
+        padding: 20px;
+        border-radius: 5px;
+        position:relative;
+    }
+
+    .groupForm {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+        .groupForm div {
+            width: 100%;
+            margin-left: 40px;
+        }
+
+        .groupForm input {
+            width: 100%;
+        }
+
+    .buttonAdd {
+        background-color: blue;
+        color: white;
+        border: 1px solid blue;
+        border-radius: 3px;
+        padding: 5px 7px;
+        width: 100%;
+    }
+
+    .groupChild {
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin-right: 4%;
+        width: 86% !important;
+        padding-bottom: 10px;
+    }
+
+        .groupChild > h3 {
+            font-weight: bold;
+            font-size: 15px;
+        }
+            .groupChild > h3 > span {
+                margin-left: 3px;
+                color: red;
+            }
+           
+
+    .orderForm {
+        position: absolute;
+        width: 80%;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        display: none;  
+        
+    }
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 999;
+    }
+    #close{
+        position:absolute;
+        font-size:20px;
+        top:5px;
+        right:5px;
+        font-weight:500;
+        cursor:pointer;
+        background-color:black;
+        color:white;
+        padding:5px;
+    }
+    .loginType{
+        display:block;
+        width:100%;
+        padding:5px;
+    }
+</style>
+
+
+<main>
+
+    <div class="container ega-product-xs-no-pd" itemscope="" itemtype="http://schema.org/Product">
+
+        <div class="row ega-product-page">
+            <!--left aside-->
+            <div class="col-xs-12 col-sm-12 col-md-9">
+                <div id="ega-product-app" class="ega-product-page-info-item ega-product-page-info">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+
+                            <div role="img">
+                                <a href="javascript:void(0)"
+                                   data-rel="prettyPhoto[product-gallery]">
+                                    <img id="main-img"
+                                         src="@ViewBag.Phong.image"
+                                         data-zoom-image="https://bizweb.dktcdn.net/thumb/large/100/172/033/products/sua-bot-pediasure-lon-1600g-1-org-4.jpg"
+                                         alt="" class="img-responsive center-block">
+                                </a>
+
+
+                                <div class="ega-top-img-slider" style="display: none;">
+                                    <div class="ega-close-fixed-img-slider">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </div>
+                                    <div class="ega-table-top-img-slider">
+                                        <div>
+                                            <div>
+                                                <div class="ega-hover-hand">
+                                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                                </div>
+                                            </div>
+                                            <div class="ega-td-80">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-center">
+                                                            <img id="main-img-slider"
+                                                                 alt=""
+                                                                 src="https://bizweb.dktcdn.net/thumb/large/100/172/033/products/sua-bot-pediasure-lon-1600g-1-org-4.jpg"
+                                                                 class="img-responsive center-block">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="ega-hover-hand">
+                                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                                </div>
+                                                <div style="font-size: 16px;"><b>4/5</b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <input id="ID" name="ID" value="@ViewBag.Phong.id" readonly type="hidden" />
+                            @if (currentUser != null)
+                            {
+                            <input id="userID" name="userID" value="@currentUser.id" readonly type="hidden" />}
+
+                            <h1 class="ega-product-title">
+                                @ViewBag.Phong.name
+                            </h1>
+                            <div itemscope="itemscope" itemtype="http://schema.org/Offer" class="ega-show-after"
+                                 style="display: block;">
+                                @if (@ViewBag.Phong.discount > 0)
+                                {
+                        <strong itemprop="price" class="ega-pr-page-price">
+                            @{ var UnitPrice = string.Format("{0:N0}đ", @ViewBag.Phong.unitPrice); }
+                            <span id="UnitPrice" style="text-decoration: line-through;">@UnitPrice</span>
+                        </strong> var giaSauGiamGia = (float)@ViewBag.Phong.unitPrice - (float)@ViewBag.Phong.unitPrice * ((float)@ViewBag.Phong.discount / 100);
+                        <strong class="unitPrice" itemprop="price" class="ega-pr-page-price">
+                            @{ var formattedPrice = string.Format("{0:N0}đ / ngày", giaSauGiamGia); }
+                            @formattedPrice
+                        </strong> }
+                        else
+                        {
+                            <strong class="unitPrice" itemprop="price" class="ega-pr-page-price">
+                            @{ var formattedPrice = string.Format("{0:N0}đ / ngày", @ViewBag.Phong.unitPrice); }
+                            <span id="UnitPrice">@formattedPrice</span>
+                        </strong>}
+                                <meta itemprop="priceCurrency" content="VND"> <del itemprop="priceSpecification"
+                                                                                   class="ega-old-price-home" style="display: inline-block;"></del>
+                                <meta itemprop="priceCurrency" content="VND">
+                            </div>
+
+                            <div role="giao-hang">
+                                <ul class="ega-pr-page-ul-policies">
+                                    <li>
+                                        <div class="ega-giao-hang-pr-page">
+                                            <h4>
+                                                <span class="ega-triangle-left">►</span>
+                                                Nhận phòng và Trả phòng:
+                                            </h4>
+                                            <p style="padding-left: 15px;">
+                                                Thời gian nhận và trả phòng linh hoạt để phục vụ nhu cầu của bạn.
+                                            </p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="ega-giao-hang-pr-page">
+                                            <h4>
+                                                <span class="ega-triangle-left">►</span>
+                                                Bảo trì Phòng:
+                                            </h4>
+                                            <p style="padding-left: 15px;">
+                                                Dịch vụ bảo trì dựa trên hợp đồng bảo hành phòng (nếu có).
+                                            </p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="ega-giao-hang-pr-page">
+                                            <h4>
+                                                <span class="ega-triangle-left">►</span>
+                                                Phương thức thanh toán:
+                                            </h4>
+                                            <p style="padding-left: 15px;">
+                                                Các phương thức thanh toán thuận tiện, bao gồm thẻ tín dụng hoặc thanh toán khi nhận phòng.
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <input type="hidden" name="variantId"
+                                   value="9843232">
+                            <div role="options" class="ega-show-after" style="display: block;">
+                                <ul class="ega-ul-options">
+                                    <li><!----></li>
+                                </ul>
+                            </div>
+
+                            @if (ViewBag.Phong.status == 0)
+                            {
+                <div role="qty " class="qty-disable">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label class="ega-option-title">Số lượng người: </label>
+                        </div>
+                        <div class="col-xs-8">
+                            <div class="input-group ega-qty-control">
+                                <input disabled type="text" name="quantity" maxlength="4" id="exampleInputAmount"
+                                       value="@ViewBag.Phong.quantity" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div> if (currentUser != null)
+                {
+                    <div class="ega-btn-product-div">
+                        <button id="btnOrder" class="btn ega-pr-page-add-cart">
+                            <b style="text-transform:uppercase">
+                                Đặt phòng
+                            </b>
+                        </button>
+
+                    </div> }
+                    else
+                    {
+                    <div style="margin-top:15px"><span>Vui lòng <a href="@Url.Action("Login", "Login")">đăng nhập </a>để đặt phòng</span></div>}
+                    }
+
+                        </div>
+
+                    </div>
+
+                    <ul id="color-schema" style="display: none;">
+
+                        <li data-title="đỏ" data-hex="#eb0707"></li>
+
+                        <li data-title="vàng" data-hex="#ebcc1a"></li>
+
+                        <li data-title="xanh" data-hex="#a1c600"></li>
+
+                        <li data-title="đen" data-hex="#0a0909"></li>
+
+                        <li data-title="nâu" data-hex="#571111"></li>
+
+                        <li data-title="hồng" data-hex="#db0da7"></li>
+
+                        <li data-title="cam" data-hex="#FF8040"></li>
+
+                        <li data-title="trắng" data-hex="#FFFFFF"></li>
+
+                    </ul>
+
+                </div>
+
+                <!--description-->
+
+
+
+                <div class="ega-product-page-info-item">
+                    <h5 class="ega-pr-page-vendor">
+                        <h3 style="font-weight:bold; font-size:15px">Loại phòng:</h3>
+                        <i>
+                            @ViewBag.Phong.TypeRoom1.name
+                        </i>
+                    </h5>
+
+                    <hr>
+                    <h5 class="ega-pr-page-vendor">
+                        <h3 style="font-weight:500; font-size:20px">Mô tả:</h3>
+                        <p>
+                            @ViewBag.Phong.description
+                        </p>
+                    </h5>
+
+                </div>
+
+
+            </div>
+
+            <!--right aside-->
+
+            <div class="col-xs-12 col-sm-12 col-md-3 ega-col-product-no-pd-left-dsk">
+                <div class="ega-product-page-info-item">
+                    <h4 style="text-transform:uppercase">
+                        Phòng thuê tương tự
+                    </h4>
+
+                    <div class="related-product-items">
+
+                        @{ int productCount = 1; }
+
+                        @foreach (var p in ViewBag.PhongByLoaiPhong)
+                        {
+                            if (productCount <= 3)
+                            {
+            <div>
+                <a class="ega-related-pr-page"
+                   href="/Room/Room/@p.id"
+                   title="@p.name">
+
+                    <div>
+                        <img class="img-responsive center-block"
+                             src="@p.image"
+                             alt="@p.name">
+                    </div>
+                    <h4>
+                        @p.name
+                    </h4>
+                </a>
+            </div>productCount += 1;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    @*Thông tin hoá đơn*@
+    <div id="overlay"></div>
+    <div id="orderForm" class="orderForm">
+        
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-main", id = "form-1" }))
+        {
+            if (currentUser != null)
+            {
+        <div class="orderAll">
+            <div><span id="close">X</span></div>
+            <h3 style="margin-bottom:10px; color:blue; text-transform:uppercase" class="text-center">Thông tin hoá đơn</h3>
+            <div class="groupForm">
+                <div>
+                    <label>Tên khách hàng: </label>
+                    <input id="name" name="name" disabled value="@currentUser.name" class=" form-control" type="text">
+                    <span class="form-message"></span>
+                </div>
+
+                <div class="form-item">
+                    <label>Email: </label>
+                    <input id="email" name="email" disabled value="@currentUser.email" class=" form-control" type="text">
+                    <span class="form-message"></span>
+                </div>
+
+            </div>
+            <div class="groupForm">
+                <div>
+                    <label>Tên phòng: </label>
+                    <input id="name" name="name" disabled value="@ViewBag.Phong.name" class=" form-control" type="text">
+                    <span class="form-message"></span>
+                </div>
+
+                <div class="form-item">
+                    <label>Giá phòng: </label>
+                    @{ var formattedPrice = string.Format("{0:N0}đ/ ngày", ViewBag.Phong.unitPrice); }
+                   
+                    <input id="unitPrice" name="unitPrice" disabled value="@formattedPrice" class=" form-control" type="text">
+                    <span class="form-message"></span>
+                </div>
+            </div>
+            <div class="groupForm">
+                <div>
+                    <label>Loại phòng: </label>
+                    <input id="typeRoom" name="typeRoom" disabled value="@ViewBag.Phong.TypeRoom1.name" class=" form-control" type="text">
+                    <span class="form-message"></span>
+                </div>
+
+                <div class="form-item">
+                    <label>Số lượng người: </label>
+                    <input id="quntity" name="quntity" disabled value="@ViewBag.Phong.quantity" class=" form-control" type="text">
+                    <span class="form-message"></span>
+                </div>
+            </div>
+            <div class="groupForm">
+                <div>
+                    <label>Ngày nhận phòng: </label>
+                    <input id="bookingDate" name="bookingDate" class=" form-control" type="date">
+                    <span class="form-message"></span>
+                </div>
+
+                <div class="form-item">
+                    <label>Ngày trả phòng: </label>
+                    <input id="checkOutDate" name="checkOutDate" class=" form-control" type="date">
+                    <span class="form-message"></span>
+                </div>
+
+            </div>
+
+            <div class="groupForm">
+                <div>
+                    <label>Thêm dịch vụ: </label>
+                    <select class="loginType" name="loginType">
+                        <option data-price ="0" value="0" selected>Không</option>
+                        @if (ViewBag.Services != null)
+                        {
+                            foreach (var s in ViewBag.Services)
+                            {
+                            <option  data-price ="@s.unitPrice"  value="@s.id">@s.name</option>}
+                             }
+                    </select>
+
+                </div>
+
+                <div id="groupChild" class="groupChild">
+                    @{
+                        var unitPrice = (float)@ViewBag.Phong.unitPrice;
+                        var discountPercentage = (float)@ViewBag.Phong.discount;
+                        var tienGiamGia = unitPrice * (discountPercentage / 100);
+                        var tongTien = unitPrice;     
+                    }
+                    <h3 style="display:none" id="hideDiscount">@tienGiamGia</h3>
+                    <h3>Giảm giá:<span id="discount"> @tienGiamGia</span></h3>
+                    <h3>Phí dịch vụ: <span id="service"></span></h3>
+                    <h3>Tổng: <span id="total">@tongTien</span></h3>
+                    <button id="buttonAdd" class="form-submit buttonAdd">Thanh Toán</button>
+                </div>
+
+            </div>
+
+        </div>}
+             }
+    </div>
+
+</main>
+
+<script>
+    $(document).ready(function () {
+        var SericeValue = 0;
+        let ServicePrev = 0;
+        var selectedValue = 0;
+
+        $("#btnOrder").on("click", function () {
+            $("body").css("width", "100%");
+            $("body").css("position", "fixed");
+            $("#overlay").fadeIn(500);
+            $("#orderForm").fadeIn(500);
+        });
+
+        $("#close").on("click", function () {
+            $("body").css("width", "100%");
+            $("body").css("position", "relative");
+            $("#overlay").fadeOut(500);
+            $("#orderForm").fadeOut(500)
+        });
+
+        //Tính toán lại tổng tiền khi chọn ngày đặt phòng và trả phòng
+        function updateTotal() {
+
+            let bookingDate = $("#bookingDate").val();
+            let checkOutDate = $("#checkOutDate").val();
+
+            if (bookingDate !== '') {
+                let currentDate = new Date();
+                if (new Date(bookingDate).getTime() < currentDate.getTime()) {
+                    $("#groupChild").hide();
+                    return alert("Ngày nhận phòng không được bé hơn hoặc bằng ngày hiện tại!")
+                }
+            }
+
+            if (bookingDate !== '' && checkOutDate !== '') {
+                let bookingDate = new Date($("#bookingDate").val());
+                let checkOutDate = new Date($("#checkOutDate").val());
+
+                if (checkOutDate.getTime() <= bookingDate.getTime()) {
+                    $("#groupChild").hide();
+                    return alert("Ngày trả phòng phải lớn hơn ngày nhận phòng!")
+                }
+                if (!isNaN(bookingDate.getTime()) && !isNaN(checkOutDate.getTime())) {
+                    $("#groupChild").show();
+                    let timeDiff = Math.abs(checkOutDate.getTime() - bookingDate.getTime());
+                    let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                    //Tính lại tiền giảm giá khi chọn lại ngày
+                    let discount = $("#hideDiscount").text();
+                    //Tính lại tồng tiền khi chọn lại ngày
+                    let formattedString = $("#UnitPrice").text();
+                    let numericValue = parseFloat(formattedString.replace(/[^\d]/g, ''));
+
+                    //Tính tổng tiền giảm giá theo ngày
+                    let numericDiscount = parseFloat(discount.replace(/[^\d]/g, ''));
+                    let discountSum = numericDiscount * diffDays;
+
+
+                    let tempSum = 0;
+
+                    //Tính tồng tiền thanh toán
+                    if (SericeValue !== 0) {
+                        tempSum = numericValue * diffDays - discountSum + SericeValue;
+                        let totalFormat = tempSum.toLocaleString('en-US', { style: 'currency', currency: 'VND' });
+                        $("#total").text(totalFormat);
+                    } else {
+                        tempSum = numericValue * diffDays - discountSum;
+                        let totalFormat = tempSum.toLocaleString('en-US', { style: 'currency', currency: 'VND' });
+                        $("#total").text(totalFormat);
+                    }
+                    let formatService = SericeValue.toLocaleString('en-US', { style: 'currency', currency: 'VND' });
+
+                    //Gán giá trị total cho cột giảm giá
+                    let totalDiscount = discountSum.toLocaleString('en-US', { style: 'currency', currency: 'VND' });
+                    $("#discount").text(totalDiscount);
+
+                    $("#service").text(formatService);
+
+                } else {
+                    $("#total").text("Invalid date(s)");
+                }
+            }
+
+        }
+
+        //Lấy giá trị khi chọn cột dịch vụ
+        $(".loginType").change(function () {
+            var selectedOption = $(this).find('option:selected');
+            SericeValue = selectedOption.data("price");
+            if (SericeValue !== 0) {
+                selectedValue = $(this).val();
+                ServicePrev = SericeValue;
+            }
+            updateTotal();
+        });
+
+        $("#groupChild").hide();
+        $("#bookingDate, #checkOutDate").change(updateTotal);
+
+        // Thanh toán
+        $("#buttonAdd").on("click", function () {
+            /*event.preventDefault();*/
+            let bookingDate = $("#bookingDate").val();
+            let checkOutDate = $("#checkOutDate").val();
+            let total = parseFloat($("#total").text().replace(/[^\d]/g, ''));
+            let roomID = $("#ID").val();
+            let customerID = $("#userID").val();
+            let serviceID = selectedValue;
+            // Ngày hiện tại
+            var bookingToday = new Date().toISOString().split('T')[0];
+
+            if (serviceID === 0) {
+                serviceID = null;
+            }
+            let data = {
+                bookingDate,
+                checkOutDate,
+                total,
+                roomID,
+                customerID,
+                serviceID,
+                bookingToday
+            }
+
+            // Sử dụng fetch để gửi dữ liệu lên server
+            fetch('/Orders/CheckOut', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+
+                        console.log("thanh cong")
+                    } else {
+                    }
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        });
+
+    });
+         
+</script>

@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "Chỉnh sửa thông tin phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #userTable th,
+    #userTable td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+
+    #userTable th {
+        background-color: #f2f2f2;
+    }
+
+    #userTable tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    #userTable tr:hover {
+        background-color: #ddd;
+    }
+
+    .search-buttons {
+        border-radius: 3px;
+        border: 1px solid black;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .main-seach {
+        margin-bottom: 5px;
+        float: right;
+        top: 10px;
+        right: 10px;
+    }
+
+    #userTable {
+        border-collapse: collapse;
+    }
+
+        #userTable th,
+        #userTable td {
+            border: none;
+            background-color: #fff;
+            border-top: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+
+    body {
+        background: #f1f1f1;
+    }
+
+    div.all-tables {
+        border-collapse: collapse;
+        background-color: #fff;
+        padding: 20px 25px;
+        margin-left: 2%;
+        margin-top: 2%;
+        margin-right: 2%;
+    }
+
+    .btn-rounded {
+        width: 47px;
+    }
+
+    #userTable {
+        width: 100%;
+    }
+
+    div.form-item > label {
+        padding-top: 5px;
+        color: black !important;
+        display: block;
+        font-size: 15px !important;
+    }
+
+    div.form-item input {
+        margin-bottom: 5px;
+    }
+
+    div.form-btn {
+        margin-top: 5px;
+    }
+
+    .buttonAdd {
+        background-color: dodgerblue;
+        color: white;
+        border: 1px solid dodgerblue;
+    }
+</style>
+
+
+<div class="all-tables">
+    <h1 class="text-center text-info m-t-10">Chỉnh sửa thông tin phòng</h1>
+    <div id="userTable">
+        @using (Html.BeginForm("EditRoom", "Room", FormMethod.Post))
+        {
+        <form class="form-main" id="form">
+            <input id="ID" name="ID" value="@ViewBag.Room.id" readonly type="hidden" placeholder="" />
+            <div>
+                <label style="color:black">Tên phòng: </label>
+                <input id="Name" name="Name" class=" form-control" value="@ViewBag.Room.name" type="text" placeholder="Nhập tên phòng">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-item">
+                <label>Giá thuê phòng: </label>
+                <input id="UnitPrice" name="UnitPrice" class=" form-control" value="@ViewBag.Room.unitPrice" type="text" placeholder="Nhập giá tiền phòng">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-item">
+                <label>Giảm giá: (%) </label>
+                <input id="Discount" name="Discount" class=" form-control" value="@ViewBag.Room.discount" type="text" placeholder="Nhập giá tiền phòng">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-item">
+                <label>Số lượng người cho thuê: </label>
+                <input id="Quantity" name="Quantity" class=" form-control" value="@ViewBag.Room.quantity" type="text" placeholder="Nhập số lượng người cho thuê">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="dropdown">
+                <label style="color:black">Chọn danh mục: </label>
+                <select class="form-control" id="TypeRoom" name="TypeRoom">
+                    @foreach (var type in ViewBag.loaiPhong)
+                    {
+                        if (type.id == @ViewBag.Room.typeRoom)
+                        {
+                        <option style="color:black" value="@type.id" selected> @type.name </option> 
+                        }
+                        else
+                        {
+                        <option value="@type.id"> @type.name </option>
+                        }
+                   }
+                </select>
+                <span class="form-message"></span>
+
+            </div>
+            <div class="form-item">
+                <label>Mô tả: </label>
+                <textarea id="Description" name="Description" class=" form-control" type="text" placeholder="Nhập mô tả">@ViewBag.Room.description</textarea>
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-item">
+                <label>Hình ảnh: </label>
+                <input id="Image_Url" class=" form-control" name="Image_Url" value="@ViewBag.Room.image" type="text" placeholder="Nhập link ảnh" />
+                <span class="form-message"></span>
+            </div>
+
+
+            <div class="form-btn">
+                <button type="submit" class="form-submit buttonAdd">Xác nhận</button>
+
+            </div>
+        </form>
+        }
+    </div>
+</div>
+
+<script>
+    Validator({
+        form: '#form',
+        formGroupSelector: '.form-item',
+        errorSelector: '.form-message',
+        rules: [
+
+            Validator.isRequired('#Name', "Vui lòng nhập tên phòng đầy đủ !"),
+            Validator.isRequired('#UnitPrice', "Vui lòng nhập giá tiền!"),
+
+
+        ],
+        onSubmit: function (data) {
+            const form = document.getElementById("form");
+            const formData = new FormData(form)
+            fetch('/Room/EditRoom', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    console.log("fetch dữ liệu thành công lên server");
+                })
+                .catch(error => {
+                    console.log("fetch dữ liệu thất bại");
+                });
+        }
+    })
+</script>

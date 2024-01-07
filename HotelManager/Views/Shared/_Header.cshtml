@@ -1,0 +1,182 @@
+﻿@{ 
+    var currentUser = Session["currentUser"] as HotelManager.DTO.Customer;
+    var colClass = (currentUser != null && currentUser.roleID == 2) ? "col-xs-5" : "col-xs-6";
+    var colClass2 = (currentUser != null && currentUser.roleID == 2) ? "col-xs-5" : "col-xs-4";
+} 
+
+<style>
+    span.user-css {
+        background-color: white;
+    }
+
+    .user-css, .style-log {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: black;
+        padding: 5px 7px;
+    }
+
+    span.user-css {
+        margin-left: 5px;
+    }
+
+    .style-log {
+        background-color: white;
+    }
+
+        .style-log:hover {
+            color: #ff4500;
+        }
+
+    .logoutStyle > a {
+        color: black;
+        text-decoration: none
+    }
+
+    .show {
+        display: block;
+    }
+
+    .parentUl {
+        position: relative;
+    }
+
+    .styleAdmin:hover {
+        cursor: pointer;
+        text-decoration: none;
+    }
+</style>
+
+<header class="header">
+    <div class="ega-top-header hidden-xs hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-2">
+                    <div style="display:flex" class="ega-item-top-bar">
+
+                        <a href="@Url.Action("Index", "Home")" title="logo phòng">
+                            <img alt="Siêu thị IT01" src="~/static/image/logo_7.png"
+                                 class="ega-logo">
+                        </a>
+                        <h4 style="color: white; font-family:VnClarendonH; margin-left:5px" ;>Booking.vn</h4>
+                    </div>
+                </div>
+
+                <div class="@colClass">
+                    <div class="ega-item-top-bar">
+
+                        <form class="ega-form-search-top" role="search" method="get"
+                              action="/Home/RoomInType/">
+                            <div class="ega-div-top-search">
+                                <input autocomplete="off" name="search" type="search"
+                                       placeholder="Thuê phòng hôm nay ?" />
+                                <button type="submit">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="@colClass2">
+                    <div class="ega-item-top-bar">
+                        <div class="ega-top-message">
+
+                            @if (currentUser == null)
+                            {
+                <span class="hidden-xs ega-header-top-item">
+                    @Html.ActionLink("Đăng ký", "Register", "Login", null, new { @class = "ega-a-account-header", style = "font-size: 12px" })
+                    /@Html.ActionLink("Đăng nhập", "Index", "Login", null, new { @class = "ega-a-account-header", style = "font-size: 12px" })
+                </span> }
+            else
+            {
+
+
+            <span class="hidden-xs ega-header-top-item parentUl">
+
+            @if (currentUser.roleID == 2)
+            {
+                  <a class="styleAdmin" href="Admin/Home/Index" title="not found">
+                    <span class="user-css">QL Thuê phòng</span> </a>
+                    }
+                        <span class="user-css">Chào @currentUser.name !</span>
+                        <span class="user-css logoutStyle">@Html.ActionLink("Đăng xuất", "Logout", "Login")</span>
+                    </span>
+
+                <span style="width:100px" class="ega-header-top-item ega-top-cart-sendo">
+                    <a class="ega-a-cart-icon-top" href="/Orders/Index/@currentUser.id"
+                       title="cart">
+                        <span class="glyphicon glyphicon-shopping-cart">
+
+                        </span>
+                        <span class="ega-a-cart-icon-top__number ega-header-top-item" id="numberCart"></span>
+                    </a>
+                </span>}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--menu-->
+    <div>
+        <div class="navbar yamm navbar-default ega-menu-top">
+            <div class="container ega-container-header-sm">
+
+                <div id="ega-menu-deiv-top" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav" style="margin-bottom: 0;">
+
+                        @if (ViewBag.loaiPhong != null)
+                        {
+                            foreach (var c in ViewBag.loaiPhong)
+                            {<!--submenu-->
+                                <li class="dropdown yamm-fw ega-dropdown-menu li-ega-menu-no-mega">
+                                    <a href="@Url.Action(actionName: "RoomInType", controllerName: "Home", routeValues: new { LoaiPhong = c.id })" title="Phòng"
+                                       data-toggle="dropdown" class="dropdown-toggle hidden-xs hidden-sm"
+                                       aria-expanded="true">
+                                        @c.name
+                                        <b class="caret hidden-xs"></b>
+                                    </a>
+                                    <div class="visible-ega-table-xs ega-menu-xs-drop-down">
+                                        <a href="@Url.Action(actionName: "RoomInType", controllerName: "Home", routeValues: new { LoaiPhong = c.id })" title="Phòng">
+                                            Sản phẩm
+                                        </a>
+                                        <a href="javascript:void(0)" class="ega-menu-right-down-ico">
+                                            <span class="">
+                                                <span class="glyphicon glyphicon-menu-down"></span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </li>}
+                            }
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy giá trị từ sessionStorage
+        var cartItemCount = sessionStorage.getItem("countCart");
+
+
+        // Nếu giá trị không null hoặc undefined, cập nhật lại trên giao diện
+        if (cartItemCount != null && cartItemCount != undefined) {
+            var countCartElement = document.getElementById("numberCart");
+            countCartElement.innerHTML = cartItemCount;
+        }
+    });
+
+</script>

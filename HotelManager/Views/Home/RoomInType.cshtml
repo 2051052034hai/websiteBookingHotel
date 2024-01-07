@@ -1,0 +1,110 @@
+﻿﻿
+@{
+    ViewBag.Title = "Phòng theo loại phòng";
+}
+
+<style>
+    .ega-home-slider .owl-dots {
+        bottom: 30px !important;
+    }
+</style>
+
+<div class="page-content container">
+
+    <div class="page-content container">
+        <!--session home page: only session lider-->
+        <!----------------Phần ảnh trượt slice đầu trang web--------------->
+        <section class="ega-section-1">
+            <div id="ega-home-slider" class="ega-home-slider owl-carousel owl-theme owl-loaded owl-drag">
+                <!-- Slide 1 -->
+                <div class="owl-item active" style="width: 1160px;">
+                    <div class="item">
+                        <a href="#" title="phòng" class="clearfix">
+                            <img style="width: 1200px; height: 350px" class="img-slider-home" data-max-width="1160" src="~/static/image/room_1.png" alt="Tất cả sản phẩm">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="owl-item" style="width: 1160px;">
+                    <div class="item">
+                        <a href="#" title="phòng" class="clearfix">
+                            <img style="width: 1200px; height:350px" class="img-slider-home" data-max-width="1160" src="~/static/image/room_2.png" alt="Tất cả sản phẩm">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="owl-item" style="width: 1160px;">
+                    <div class="item">
+                        <a href="#" title="phòng" class="clearfix">
+                            <img style="width: 1200px; height:350px" class="img-slider-home" data-max-width="1160" src="~/static/image/room_3.png" alt="Tất cả sản phẩm">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút bấm -->
+            <div class="owl-dots">
+                <div class="owl-dot active"><span></span></div>
+                <div class="owl-dot"><span></span></div>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    $('#ega-home-slider').owlCarousel({
+                        items: 1,
+                        loop: true,
+                        nav: true,
+                        navText: ["<span class='glyphicon glyphicon-menu-left'></span>", "<span class='glyphicon glyphicon-menu-right'></span>"],
+                        dots: true
+                    });
+                });
+            </script>
+        </section>
+
+        <div class="ega-home-slider-products hidden-xs">
+            <section class="ega-home-collection">
+
+                <div class="ega-home-product-items">
+                    <div style="display:flex; flex-wrap: wrap" class="owl-loaded owl-drag">
+                        @if (ViewBag.Rooms != null)
+                        {
+                            foreach (var P in ViewBag.Rooms)
+                            {
+            <div class="owl-stage-outer" style="border: 1px solid black; width:24%; margin: 0.5%; padding:10px">
+                <div class="owl-item active" style="width: 190px;">
+                    <div class="item">
+                        <a class="ega-home-product-link"
+                          href="/Room/Room/@P.id"
+                           title="@P.name">
+                            <img class="center-block"
+                                 src="@P.image"
+                                 alt="@P.name">
+                            <div>
+                                <h3 class="ega-home-product-name">
+                                    @P.name
+                                </h3>
+                                <div class="ega-main-price-home">
+                                    @{ var formattedPrice = string.Format("{0:N0}đ / ngày", P.unitPrice); }
+                                    @formattedPrice
+                                </div>
+                            </div>
+                            <!--sale tag-->
+                        </a>
+                    </div>
+                </div>
+            </div> }
+                        }
+                        else
+                        {
+            <h3>Không có kết quả nào phù hợp !</h3>}
+
+
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+    </div>

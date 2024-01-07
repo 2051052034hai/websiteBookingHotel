@@ -1,0 +1,355 @@
+﻿﻿
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+}
+<link href='https://unpkg.com/css.gg@2.0.0/icons/css/eye-alt.css' rel='stylesheet'>
+<style>
+    .search-buttons {
+        border-radius: 3px;
+        border: 1px solid black;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .main-seach {
+        margin-bottom: 5px;
+        float: right;
+        top: 10px;
+        right: 10px;
+    }
+
+
+    body {
+        background: #f1f1f1;
+    }
+
+    div.all-tables {
+        border-collapse: collapse;
+        background-color: #fff;
+        padding: 20px 25px;
+        margin-left: 5%;
+        margin-top: 5%;
+        margin-right: 3%;
+    }
+
+    .btn-rounded {
+        width: 47px;
+    }
+
+    .status-red {
+        background-color: rgba(255, 0, 0, 0.7);
+        color: white;
+        padding: 3px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 999;
+    }
+
+    .status-green {
+        background-color: rgba(0, 128, 0, 0.7);
+        color: white;
+        padding: 5px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    .status-blue {
+        background-color: rgba(0, 0, 255, 0.7);
+        color: white;
+        padding: 5px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    .approve {
+        background-color: black;
+        color: white;
+        opacity: 0.8;
+    }
+
+    .style-black {
+        background-color: black;
+        color: white;
+        font-size: 13px;
+        padding: 5px;
+    }
+
+        .style-black:hover {
+            opacity: 0.7;
+        }
+
+    .tableView {
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        padding: 5%;
+        background-color: white !important;
+        z-index: 999;
+        width:90%;
+    }
+
+    .hideView {
+        display: none;
+    }
+
+    #close {
+        position: absolute;
+        font-size: 20px;
+        top: 5px;
+        right: 5px;
+        font-weight: 500;
+        cursor: pointer;
+        background-color: black;
+        color: white;
+        padding: 5px;
+    }
+</style>
+
+
+<div class="all-tables" style="overflow: scroll; height: 800px">
+
+
+    <div style="margin-left: auto; width: 100%" class="main-seach">
+        <span style="font-size: 15px;">Tìm kiếm:</span>
+        <input style="font-size: 15px; width:100%; padding:5px" type="text" onchange="searchUser()" id="searchInput" class="search-buttons" oninput="searchUser()" placeholder="Nhập mã hoá đơn...">
+    </div>
+
+    <div>
+        <table id="userTable" class="table table-striped">
+            <tr>
+                <th>Số hoá đơn</th>
+                <th>Ngày nhận phòng</th>
+                <th>Ngày trả phòng</th>
+                <th>Tên khách hàng</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th class="text-center">Thao tác</th>
+                <th></th>
+            </tr>
+            @foreach (var order in ViewBag.orders)
+            {
+        <tr>
+            <td style="display:none" width="100" class="roomID">@order.roomID</td>
+            <td width="100" class="billID">@order.id</td>
+            <td width="200" class="bookingDate">@order.bookingDate</td>
+            <td width="200" class="checkOutDate">@order.checkOutDate</td>
+            <td width="150" class="name">@order.Customer.name</td>
+            <td width="200" class="total">
+                @{ var formattedPrice = string.Format("{0:N0} đồng", order.total);}
+                @formattedPrice
+            </td>
+
+            @if (order.status == 0)
+            {
+                <td width="100"><span class="status-green">Đang cho thuê</span></td>
+
+            }
+            else if (order.status == 2)
+            {
+                <td width="100"><span class="status-blue">Đã trả phòng</span></td>
+            }
+            else if (order.status == 1)
+            {
+                <td width="100"><span class="status-red">Đã huỷ</span></td>
+            }
+
+            <td title="Xem chi tiết" width="100"><span><i style="margin-left:50%; cursor:pointer" class="gg-eye-alt view"></i></span></td>
+            
+            @if (order.status == 0){
+            <td><button class="style-black btn_Click">Trả phòng </button></td>
+            }
+
+            <td class="roomImg hideView">@order.Room.image</td>
+            <td class="roomName hideView">@order.Room.name</td>
+            <td class="unitPrice hideView">@order.Room.unitPrice</td>
+            <td class="discount hideView">@order.Room.discount</td>
+            <td class="quantity hideView">@order.Room.quantity</td>
+            <td class="description hideView">@order.Room.description</td>
+            @if (order.Service == null)
+            {
+                <td class="serviceName hideView">không</td>
+                <td class="servicePrice hideView">0</td>
+            }
+            else
+            {
+                <td class="serviceName hideView">@order.Service.name</td>
+                <td class="servicePrice hideView">@order.Service.unitPrice</td>
+            }
+
+        </tr>
+
+            }
+        </table>
+    </div>
+</div>
+
+<div id="overlay"></div>
+<div id="tableView" class="tableView hideView">
+    <div><span id="close">X</span></div>
+    <h2 class="text-center text-info m-t-3">Chi tiết hoá đơn </h2>
+    <table class="table table-striped">
+        <tr>
+            <th></th>
+            <th>Tên phòng</th>
+            <th>Giá thuê phòng</th>
+            <th>Giảm giá</th>
+            <th>Số người thuê</th>
+            <th>Mô tả</th>
+            <th>Loại dịch vụ</th>
+            <th>Giá dịch vụ</th>
+        </tr>
+
+        <tr>
+            <td width="100"><img width="100%" id="roomImg" alt="not found" src="" /></td>
+            <td width="150" id="roomName"></td>
+            <td width="150" id="unitPrice"></td>
+            <td width="150" id="discount"></td>
+            <td width="100" id="quantity"></td>
+            <td width="200" id="description"></td>
+            <td width="200" id="serviceName"></td>
+            <td width="150" id="servicePrice"></td>
+        </tr>
+    </table>
+</div>
+
+<script>
+
+    var searchInput = document.getElementById("searchInput")
+    var userTable = document.getElementById("userTable");
+
+    function searchUser() {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        for (let i = 1; i < userTable.rows.length; i++) {
+            const billID = userTable.rows[i].cells[1].textContent.toLowerCase();
+
+            if (billID.includes(searchTerm)) {
+                userTable.rows[i].style.display = '';
+            } else {
+                userTable.rows[i].style.display = 'none';
+            }
+        }
+    }
+
+    // Định dạng ngày cho cột bookingDate và checkOutDate
+    function changeTime(timer) {
+        var parts = timer.split(' ')[0].split('/');
+        var formattedDate = parts[0] + '/' + parts[1] + '/' + parts[2];
+        return formattedDate;
+    }
+
+    $(".bookingDate").each(function () {
+        $(this).text(changeTime($(this).text()));
+    });
+
+    $(".checkOutDate").each(function () {
+        $(this).text(changeTime($(this).text()));
+    });
+
+    //Xem thông tin chi tiết đơn hàng
+    $(".view").on("click", function () {
+        $("#overlay").fadeIn(500);
+        $("#tableView").fadeIn(500);
+
+        let parentNode = $(this).parent().parent().parent();
+
+        $("#roomImg").attr("src", parentNode.find(".roomImg").text());
+        $("#roomName").text(parentNode.find(".roomName").text());
+        $("#unitPrice").text(parseFloat(parentNode.find(".unitPrice").text()).toLocaleString('en-US', { style: 'currency', currency: 'VND' }));
+        $("#discount").text(parentNode.find(".discount").text() + " %");
+        $("#quantity").text(parentNode.find(".quantity").text());
+        $("#description").text(parentNode.find(".description").text());
+        $("#serviceName").text(parentNode.find(".serviceName").text());
+        $("#servicePrice").text(parseFloat(parentNode.find(".servicePrice").text()).toLocaleString('en-US', { style: 'currency', currency: 'VND' }));
+    });
+
+    $("#close").on("click", function () {
+        $("#overlay").fadeOut(500);
+        $("#tableView").fadeOut(500)
+    });
+
+    //Xử lý xác nhận trả phòng
+    var statusList = $('.status-green');
+    $('.status-green').each(function () {
+        let parentStatus = $(this).parent().parent();
+        let checkOutDateText = parentStatus.find(".checkOutDate").text();
+
+        if (checkOutDateText.trim() !== "") {
+            // Chuyển đổi định dạng ngày từ "dd/mm/yyyy" sang "mm/dd/yyyy"
+            let parts = checkOutDateText.split("/");
+            let formattedCheckOutDateText = parts[1] + "/" + parts[0] + "/" + parts[2];
+            let date1 = new Date(new Date(formattedCheckOutDateText));
+            let date2 = new Date(new Date());
+            if (date1.getTime() <= date2.getTime()) {
+                $(this).css("backgroundColor", "blue");
+                $(this).text("Trả phòng");
+                $(this).parent().parent().find(".btn_Click").text("Xác nhận");
+            } else {
+               // parentStatus.find(".btn_Click").css("display", "none")
+            }
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let arrBtn = document.querySelectorAll(".btn_Click");
+
+        arrBtn.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                let parentBtn = this.parentNode.parentNode;
+                let billID = parentBtn.querySelector(".billID").textContent;
+                let roomID = parentBtn.querySelector(".roomID").textContent;
+                let data = {
+                    id: parseInt(billID),
+                    status: 2,
+                    roomID: roomID
+                }
+                handleUpdateCart(data);
+            });
+        });
+       
+    });
+
+    //Update
+    const handleUpdateCart = function (data) {
+        $.ajax({
+            type: "POST",
+            url: "/Orders/UpdateAdmin",
+            data: { newData: data },
+            success: function (response) {
+                console.log("Cập nhật dữ liệu thành công");
+                location.reload();
+            },
+            error: function (error) {
+                console.error("Cập nhật thất bại!", error);
+            }
+        });
+    }
+   
+</script>
